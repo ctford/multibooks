@@ -1,0 +1,14 @@
+<?php
+// $Id:
+
+/**
+ * @file
+ * Allows nodes to live in more than one book.
+ */
+
+/**
+ * Implementation of hook_perm().
+ */
+function multibooks_perm() {
+  return array('add nodes to multiple books');
+}

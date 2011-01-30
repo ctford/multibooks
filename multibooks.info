@@ -1,0 +1,5 @@
+; $Id:
+name = Multibooks 
+description = Allows nodes to live in more than one book.
+core = 6.x
+dependencies[]=book
