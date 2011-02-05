@@ -4,20 +4,56 @@ class MultibooksFunctionalTest extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => 'Multibooks',
+      'name' => 'Multibooks functional tests',
       'description' => "Test the addition, deletion and rearrangement of nodes' secondary books.",  
       'group' => 'Multibooks',
     );
   }
 
-  function setUp() {
-    parent::setUp('multibooks');
+  private $multibook_editor;
+  private $blue_cover;
+  private $blue_pages = array();
+  private $green_cover;
 
-    // Create and login user
-    $multibook_editor = $this->drupalCreateUser(array('edit secondary books'));
-    $this->drupalLogin($multibook_editor);
+  public function setUp() {
+    // Enable modules
+    parent::setUp('node', 'book', 'multibooks');
+
+    // Create and login with user
+    $this->multibook_editor = $this->drupalCreateUser(array(
+      'access content',
+      'create page content',
+      'edit secondary books',
+    ));
+    $this->drupalLogin($this->multibook_editor);
+
+    // Set up two normal books
+    $this->blue_cover = $this->drupalCreateNode(array(
+      'type'  => "page",
+      'title' => "Blue book cover",
+      'book[bid]' => "new",
+    ));
+    $this->blue_pages[] = $this->drupalCreateNode(array(
+      'type'  => "page",
+      'title' => "Blue page1",
+      'book[bid]' => $this->blue_cover->nid,
+    ));
+    $this->blue_pages[] = $this->drupalCreateNode(array(
+      'type'  => "page",
+      'title' => "Blue page2",
+      'book[bid]' => $this->blue_cover->nid,
+    ));
+    $this->green_cover = $this->drupalCreateNode(array(
+      'type'  => "page",
+      'title' => "Green book cover",
+      'book[bid]' => "new",
+    ));
   }
 
-  function testAddSecondaryBook() {
+  public function testAddSinglePage() {
+    $this->drupalGet("node/{$this->blue_cover->nid}");
+    foreach ($this->blue_pages as $blue_page) {
+      $this->assertText($blue_page->title);
+    }
   }
 }
