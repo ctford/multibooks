@@ -48,6 +48,7 @@ function multibooks_form_alter(&$form, $form_state, $form_id) {
  * Insert menu links for the node in its secondary books.
  */
 function _multibooks_update($node) {
+  db_query("DELETE FROM {multibooks} WHERE nid = %d", $node->nid);
   db_query("INSERT INTO {multibooks} (nid, secondary_parent) VALUES(%d, %d)",
     $node->nid,
     $node->book['secondary_book'] 
