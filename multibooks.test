@@ -12,7 +12,8 @@ class MultibooksFunctionalTest extends DrupalWebTestCase {
 
   private $multibook_editor;
   private $blue_cover;
-  private $blue_pages = array();
+  private $blue_page1;
+  private $blue_page2;
   private $green_cover;
 
   public function setUp() {
@@ -31,29 +32,28 @@ class MultibooksFunctionalTest extends DrupalWebTestCase {
     $this->blue_cover = $this->drupalCreateNode(array(
       'type'  => "page",
       'title' => "Blue book cover",
-      'book[bid]' => "new",
+      'book'  => array('bid' => 'new'),
     ));
-    $this->blue_pages[] = $this->drupalCreateNode(array(
+    $this->blue_page1 = $this->drupalCreateNode(array(
       'type'  => "page",
       'title' => "Blue page1",
-      'book[bid]' => $this->blue_cover->nid,
+      'book'  => array('bid' => $this->blue_cover->nid),
     ));
-    $this->blue_pages[] = $this->drupalCreateNode(array(
+    $this->blue_page2 = $this->drupalCreateNode(array(
       'type'  => "page",
       'title' => "Blue page2",
-      'book[bid]' => $this->blue_cover->nid,
+      'book'  => array('bid' => $this->blue_cover->nid),
     ));
     $this->green_cover = $this->drupalCreateNode(array(
       'type'  => "page",
       'title' => "Green book cover",
-      'book[bid]' => "new",
+      'book'  => array('bid' => 'new'),
     ));
   }
 
   public function testAddSinglePage() {
     $this->drupalGet("node/{$this->blue_cover->nid}");
-    foreach ($this->blue_pages as $blue_page) {
-      $this->assertText($blue_page->title);
-    }
+    $this->assertLink($this->blue_page1->title);
+    $this->assertLink($this->blue_page2->title);
   }
 }
