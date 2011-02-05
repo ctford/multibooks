@@ -6,7 +6,7 @@
  * Implementation of hook_perm().
  */
 function multibooks_perm() {
-  return array('add nodes to secondary books');
+  return array('edit secondary books');
 }
 
 

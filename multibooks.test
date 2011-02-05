@@ -1,0 +1,23 @@
+<?php
+
+class MultibooksFunctionalTest extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Multibooks',
+      'description' => "Test the addition, deletion and rearrangement of nodes' secondary books.",  
+      'group' => 'Multibooks',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('multibooks');
+
+    // Create and login user
+    $multibook_editor = $this->drupalCreateUser(array('edit secondary books'));
+    $this->drupalLogin($multibook_editor);
+  }
+
+  function testAddSecondaryBook() {
+  }
+}
