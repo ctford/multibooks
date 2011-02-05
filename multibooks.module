@@ -1,14 +1,74 @@
 <?php
 // $Id:
 
-/**
- * @file
- * Allows nodes to live in more than one book.
- */
 
 /**
  * Implementation of hook_perm().
  */
 function multibooks_perm() {
-  return array('add nodes to multiple books');
+  return array('add nodes to secondary books');
+}
+
+
+/**
+ * Implementation of hook_nodeapi().
+ */
+function multibooks_nodeapi(&$node, $op, $teaser, $page) {
+  switch($op) {
+    case 'presave':
+      _multibooks_update_book_tocs($node);
+      break;
+    case 'delete':
+      _multibooks_delete_from_book_tocs($node);
+      break;
+  }
+}
+
+
+/**
+ * Implementation of hook_form_alter().
+ */
+function multibooks_form_alter(&$form, $form_state, $form_id) {
+  if ((isset($form['#node'])) && ($form_id == $form['#node']->type . '_node_form')) {
+  }
+}
+
+
+/**
+ * Update the link to this node in its secondary books.
+ */
+function _multibooks_update_book_tocs($node) {
+  _multibooks_delete_from_book_tocs($node);
+  _multibooks_add_to_book_tocs($node);
+}
+
+
+/**
+ * Clean out all menu links for this node's secondary books.
+ */
+function _multibooks_delete_from_book_tocs($node) {
+}
+
+
+/**
+ * Insert menu links for the node in its secondary books.
+ */
+function _multibooks_add_to_book_tocs($node) {
+  $result = db_query("
+    SELECT mb.secondary_parent, b.bid
+    FROM {multibooks} mb
+    INNER JOIN {book} b ON mb.secondary_parent = b.nid 
+    WHERE mb.nid=%d",
+    $node->nid
+  );
+
+  while ($row = db_fetch_array($result)) {
+    $item = array(
+      'menu_name'   => "book-toc-{$row['bid']}",  
+      'router_path' => "book/{$row['bid']}/node/{$node->nid}",
+      'link_title'  => $node->title,
+      'module'      => "multibooks",
+    );
+    menu_link_save($item);
+  }
 }

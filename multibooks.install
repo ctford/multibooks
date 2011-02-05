@@ -1,0 +1,44 @@
+<?php 
+// $Id$
+
+
+/**
+ * Implementation of hook_install()
+ */
+function multibooks_install() {
+  drupal_install_schema('multibooks');
+}
+
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function multibooks_uninstall() {
+  drupal_uninstall_schema('multibooks');
+}
+
+
+/**
+ * Implementation of hook_schema().
+ */
+function multibooks_schema() {
+  $schema['multibooks'] = array(
+  'description' => 'Connects nodes with their secondary books.',
+    'fields' => array(
+      'nid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => "The node's {node}.nid.",
+      ),
+      'secondary_parent' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => "The {node}.nid of the node's parent in a secondary book.",
+      ),
+    ),
+  );
+
+  return $schema;
+}
