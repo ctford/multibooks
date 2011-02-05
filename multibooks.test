@@ -52,8 +52,8 @@ class MultibooksFunctionalTest extends DrupalWebTestCase {
   }
 
   public function testAddSinglePage() {
-    $this->drupalGet("node/{$this->blue_cover->nid}");
+    $this->blue_page1->secondary_books = array($this->green_cover->nid);
+    $this->drupalGet("node/{$this->green_cover->nid}");
     $this->assertLink($this->blue_page1->title);
-    $this->assertLink($this->blue_page2->title);
   }
 }
