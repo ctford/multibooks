@@ -53,4 +53,13 @@ function _multibooks_update($node) {
     $node->nid,
     $node->book['secondary_book'] 
   );
+  $menu_link = array(
+    'link_title' => $node->title,
+    'menu_name' => "book-toc-{$node->book['secondary_book']}",
+    'link_path' => "node/{$node->nid}",
+    'router_path' => "node/%",
+    'module' => "multibooks",
+    'plid' => $node->book['plid'],
+  );
+  menu_link_save($menu_link);
 }
