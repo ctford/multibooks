@@ -15,6 +15,8 @@ class MultibooksFunctionalTest extends DrupalWebTestCase {
   private $blue_page1;
   private $blue_page2;
   private $green_cover;
+  private $green_page1;
+  private $green_page2;
 
   public function setUp() {
     // Enable modules
@@ -28,7 +30,7 @@ class MultibooksFunctionalTest extends DrupalWebTestCase {
     ));
     $this->drupalLogin($this->multibook_editor);
 
-    // Set up two normal books
+    // Set up a blue book 
     $this->blue_cover = $this->drupalCreateNode(array(
       'type'  => "page",
       'title' => "Blue book cover",
@@ -44,6 +46,8 @@ class MultibooksFunctionalTest extends DrupalWebTestCase {
       'title' => "Blue page2",
       'book'  => array('bid' => $this->blue_cover->nid),
     ));
+
+    // Set up a green book
     $this->green_cover = $this->drupalCreateNode(array(
       'type'  => "page",
       'title' => "Green book cover",
@@ -66,6 +70,7 @@ class MultibooksFunctionalTest extends DrupalWebTestCase {
     node_save($this->blue_page1);
 
     $this->drupalGet("node/{$this->green_cover->nid}");
+
     $this->assertLink($this->blue_page1->title);
   }
 }
