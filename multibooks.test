@@ -76,10 +76,12 @@ class MultibooksFunctionalTest extends DrupalWebTestCase {
 
   public function testSaveAndLoad() {
     $this->blue_page1->book['secondary_book'] = $this->green_cover->nid;
+    $this->blue_page1->book['secondary_weight'] = 7;
     node_save($this->blue_page1);
 
     $updated_node = node_load($this->blue_page1->nid, NULL, FALSE);
 
     $this->assertEqual($this->green_cover->nid, $updated_node->book['secondary_book'], "Secondary parent loaded correctly.");
+    $this->assertEqual(7, $updated_node->book['secondary_weight'], "Secondary weight loaded correctly.");
   }
 }

@@ -48,6 +48,7 @@ function multibooks_form_alter(&$form, $form_state, $form_id) {
       '#type' => 'weight',
       '#title' => t('Secondary weight'),
       '#delta' => 15,
+      '#default_value' => $form['#node']->book['secondary_weight'],
       '#weight' => $form['book']['secondary_book']['#weight'] + 1, 
       '#description' => t('Pages in secondary books are also ordered first by weight and then by title.'),
     );
@@ -77,7 +78,7 @@ function _multibooks_update($node) {
     'router_path' => "node/%",
     'module' => "multibooks",
     'plid' => $secondary_parent->book['mlid'],
-    'weight' => $secondary_parent->book['secondary_weight'],
+    'weight' => $node->book['secondary_weight'],
   );
   menu_link_save($menu_link);
 }
@@ -93,4 +94,11 @@ function _multibooks_load(&$node) {
     WHERE nid = %d
   ", $node->nid);
   $node->book['secondary_book'] = db_result($result); 
+
+  $result = db_query("
+    SELECT weight 
+    FROM {menu_links}
+    WHERE menu_name = '%s' AND link_path = '%s' 
+  ", "book-toc-{$node->book['secondary_book']}", "node/{$node->nid}");
+  $node->book['secondary_weight'] = db_result($result); 
 }
