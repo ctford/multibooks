@@ -37,14 +37,14 @@ function multibooks_form_alter(&$form, $form_state, $form_id) {
       '#options' => $options,
       '#title' => t('Secondary book'),
       '#description' => t('Your page will also be a part of this book.'),
-      '#weight' => 5
+      '#weight' => $form['book']['weight']['#weight'] + 1, 
     );
 
     $form['book']['secondary_weight'] = array(
       '#type' => 'weight',
       '#title' => t('Secondary weight'),
       '#delta' => 15,
-      '#weight' => 6,
+      '#weight' => $form['book']['secondary_book']['#weight'] + 1, 
       '#description' => t('Pages in secondary books are also ordered first by weight and then by title.'),
     );
   }
