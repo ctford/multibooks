@@ -37,7 +37,7 @@ function multibooks_form_alter(&$form, $form_state, $form_id) {
       '#options' => $options,
       '#title' => t('Secondary book'),
       '#default_value' => $node->secondary_book,
-      '#description' => t('Your page will also be a part of the selected book.'),
+      '#description' => t('Your page will also be a part of this book.'),
       '#weight' => 5
     );
   }
@@ -45,11 +45,11 @@ function multibooks_form_alter(&$form, $form_state, $form_id) {
 
 
 /**
- * Insert menu links for the node in its secondary books.
+ * Update menu links for the node in its secondary books.
  */
 function _multibooks_update($node) {
 
-  // Delete existing entries
+  // Delete existing entries from the multibooks and menu_links tables
   db_query("DELETE FROM {multibooks} WHERE nid = %d", $node->nid);
   menu_link_delete(NULL, "node/{$node->nid}");
 
