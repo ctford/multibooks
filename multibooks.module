@@ -85,7 +85,7 @@ function _multibooks_update($node) {
 
 
 /**
- * Update menu links for the node in its secondary books.
+ * Load multibooks data into a node.
  */
 function _multibooks_load(&$node) {
   $result = db_query("
