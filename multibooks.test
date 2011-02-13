@@ -16,7 +16,7 @@ class MultibooksFunctionalTest extends DrupalWebTestCase {
   private $blue_page2;
   private $green_cover;
   private $green_page1;
-  private $green_page2;
+  private $lue_page2;
 
   public function setUp() {
     // Enable modules
@@ -72,5 +72,14 @@ class MultibooksFunctionalTest extends DrupalWebTestCase {
     $this->drupalGet("node/{$this->green_cover->nid}");
 
     $this->assertLink($this->blue_page1->title);
+  }
+
+  public function testSaveAndLoad() {
+    $this->blue_page1->book['secondary_book'] = $this->green_cover->nid;
+    node_save($this->blue_page1);
+
+    $updated_node = node_load($this->blue_page1->nid, NULL, FALSE);
+
+    $this->assertEqual($this->green_cover->nid, $updated_node->book['secondary_book'], "Secondary parent loaded correctly.");
   }
 }

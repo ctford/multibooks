@@ -18,6 +18,9 @@ function multibooks_nodeapi(&$node, $op) {
     case 'update':
       _multibooks_update($node);
       break;
+    case 'load':
+      _multibooks_load($node);
+      break;
   }
 }
 
@@ -35,6 +38,7 @@ function multibooks_form_alter(&$form, $form_state, $form_id) {
     $form['book']['secondary_book'] = array(
       '#type' => 'select',
       '#options' => $options,
+      '#default_value' => $form['#node']->book['secondary_book'],
       '#title' => t('Secondary book'),
       '#description' => t('Your page will also be a part of this book.'),
       '#weight' => $form['book']['weight']['#weight'] + 1, 
@@ -76,4 +80,17 @@ function _multibooks_update($node) {
     'weight' => $secondary_parent->book['secondary_weight'],
   );
   menu_link_save($menu_link);
+}
+
+
+/**
+ * Update menu links for the node in its secondary books.
+ */
+function _multibooks_load(&$node) {
+  $result = db_query("
+    SELECT secondary_parent 
+    FROM {multibooks}
+    WHERE nid = %d
+  ", $node->nid);
+  $node->book['secondary_book'] = db_result($result); 
 }
