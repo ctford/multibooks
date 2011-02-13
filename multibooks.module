@@ -27,18 +27,25 @@ function multibooks_nodeapi(&$node, $op) {
  */
 function multibooks_form_alter(&$form, $form_state, $form_id) {
   if ((isset($form['#node'])) && ($form_id == $form['#node']->type . '_node_form')) {
+
     $options = array(0 => '<'. t('none') .'>');
     foreach (book_get_books() as $book) {
       $options[$book['nid']] = $book['title'];
     }
-
     $form['book']['secondary_book'] = array(
       '#type' => 'select',
       '#options' => $options,
       '#title' => t('Secondary book'),
-      '#default_value' => $node->secondary_book,
       '#description' => t('Your page will also be a part of this book.'),
       '#weight' => 5
+    );
+
+    $form['book']['secondary_weight'] = array(
+      '#type' => 'weight',
+      '#title' => t('Secondary weight'),
+      '#delta' => 15,
+      '#weight' => 6,
+      '#description' => t('Pages in secondary books are also ordered first by weight and then by title.'),
     );
   }
 }
@@ -66,6 +73,7 @@ function _multibooks_update($node) {
     'router_path' => "node/%",
     'module' => "multibooks",
     'plid' => $secondary_parent->book['mlid'],
+    'weight' => $secondary_parent->book['secondary_weight'],
   );
   menu_link_save($menu_link);
 }
